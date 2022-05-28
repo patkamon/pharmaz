@@ -34,4 +34,8 @@ contract Prescription is ERC721URIStorage {
 
         return newItemId;
     }
+
+    function getTokenAmount() public view returns (uint256) {
+        return _tokenIds.current();
+    }
 }
