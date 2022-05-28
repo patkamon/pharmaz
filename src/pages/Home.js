@@ -13,6 +13,9 @@ import './Home.css';
 
 const Home = () => {
 
+
+    const [prescriptions, setPrescriptions] = useState([])
+    const [receipts, setReceipts] = useState([])
     const [fileUrl, setFileUrl] = useState(null)
     const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
     const prescription = '0x28c2e12CacbeA470a68e613Ba3F4a85b8081Fc53'
@@ -154,6 +157,7 @@ const Home = () => {
                   temp.push(e.metadata)
                 })
                 console.log(temp)
+                setPrescriptions(temp)
               
               })
               .catch(error => console.log(error));
@@ -183,6 +187,7 @@ const Home = () => {
                   temp.push(e.metadata)
                 })
                 console.log(temp)
+                setReceipts(temp)
               
               })
               .catch(error => console.log(error));
@@ -200,10 +205,10 @@ const Home = () => {
         </div>
 
 
-        <div class="grid-container">
-                <a class="grid-item" href='#doctor'> <h5 >DOCTOR</h5> <p>👨‍⚕️</p></a>
-                <a class="grid-item"  href='#patient'> <h5>PATIENT</h5><p>🙍‍♂️</p></a>
-                <a class="grid-item"  href='#pharmacist'><h5>PHARMACIST</h5> <p>🧑‍⚕️</p></a>
+        <div className="grid-container">
+                <a className="grid-item" href='#doctor'> <h5 >DOCTOR</h5> <p>👨‍⚕️</p></a>
+                <a className="grid-item"  href='#patient'> <h5>PATIENT</h5><p>🙍‍♂️</p></a>
+                <a className="grid-item"  href='#pharmacist'><h5>PHARMACIST</h5> <p>🧑‍⚕️</p></a>
         </div>
 
 
@@ -212,9 +217,27 @@ const Home = () => {
 
         
         <form onSubmit={mintPrescription}>
-            <input></input><br/>
-            <input></input><br/>
-            <input placeholder="patient's wallet"></input><br/>
+             <label htmlFor='date-issue'>Date of issue: </label>
+             <input id='date-issue' type="datetime-local"></input><br/>
+            
+             <label htmlFor='patient-name'>Patient's name: </label>
+             <input id='patient-name' ></input><br/>
+            
+             <label htmlFor='drug-name'>Drug name: </label>
+             <input id='drug-name' ></input><br/>
+
+             <label htmlFor='quantity'>Quantity prescribed: </label>
+             <input id='quantity' ></input><br/>
+
+             <label htmlFor='number-refill'>Number of refills: </label>
+             <input id='number-refill' ></input><br/>
+
+             <label htmlFor='prescriber'>Signature of prescriber: </label>
+             <input id='presciber'></input><br/>
+
+
+             <label htmlFor='wallet'>Patient's wallet address: </label>
+            <input id='wallet'></input><br/>
             <input 
             type="file"
             name="Asset"
@@ -236,7 +259,39 @@ const Home = () => {
 
 
         <section onClick={checkPrescription}> Prescription</section> <br/>
+
+        {
+            prescriptions.map((p,index) =>{
+                console.log(p)
+                let date = p.date_issue;
+                let image = p.image
+
+                return (
+                    <div className ='prescription'>
+                        <h3>{date}</h3>
+                    <img src={image}/>
+                    </div>
+                )
+            })
+
+        }
+
         <section onClick={checkReceipt}> Receipt</section>
+
+        {
+            receipts.map((p,index) =>{
+                let date = p.date_receipt
+                let image = p.information
+
+                return (
+                    <div className ='receipt'>
+                        <h3>{date}</h3>
+                    !image.image || <img src={image.image}/>
+                    </div>
+                )
+            })
+
+        }
         </div>
 
 
@@ -255,8 +310,8 @@ const Home = () => {
         <div id='other' className='other'>
 
             Other <br/>
-            Github
-            Devfolio
+            <a href='https://github.com/patkamon/pharmaz' target="_blank">Github</a>
+            <a href='https://devfolio.co/gdsc-hacknmims/dashboard' target="_blank">Devfolio</a>
 
         </div>
 
