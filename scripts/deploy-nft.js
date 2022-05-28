@@ -11,8 +11,8 @@ async function main() {
     console.log("Prescription deployed to:", prescription.address);
 
     const Receipt = await ethers.getContractFactory("Receipt");
-    const receipt = await Receipt.deploy();
-    await receipt.deployed(prescription.address);
+    const receipt = await Receipt.deploy(prescription.address);
+    await receipt.deployed();
     console.log("Receipt deployed to:", receipt.address);
 
     console.log("======================================");

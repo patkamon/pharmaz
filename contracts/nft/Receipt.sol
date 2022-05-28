@@ -5,36 +5,30 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./Prescription.sol";
 
-contract Prescription is ERC721URIStorage {
+contract Receipt is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
     address public owner;
+    Prescription public prescription;
 
-    constructor(address _prescription) ERC721("Receipt", "RCP") {
+    constructor(address payable _prescription) ERC721("Receipt", "RCP") {
         // only owner will be able to do some task.
-        owner = msg.sender;
         prescription = Prescription(_prescription);
     }
 
-    function create(
-        uint256,
-        tokenId,
-        string memory tokenURI,
-        address patient
-    ) public returns (uint256) {
-        // only pharmacist (owner) that create receipt
-        require(tx.origin == owner, "Not Owner");
-        require(patient != address(0), "Patient Address not exist!");
-
+    function create(uint256 tokenId, string memory tokenURI)
+        public
+        returns (uint256)
+    {
         // take prescription
-        ERC721(prescription).transferFrom(patient, address(this), tokenId);
+        ERC721(prescription).transferFrom(msg.sender, address(this), tokenId);
 
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
 
         // mint receipt and send to patient
-        _mint(patient, newItemId);
+        _mint(msg.sender, newItemId);
 
         // set tokenURI for patient
         _setTokenURI(newItemId, tokenURI);
