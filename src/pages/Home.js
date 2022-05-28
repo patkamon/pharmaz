@@ -13,7 +13,6 @@ import './Home.css';
 
 const Home = () => {
 
-
     const [prescriptions, setPrescriptions] = useState([])
     const [receipts, setReceipts] = useState([])
     const [fileUrl, setFileUrl] = useState(null)
@@ -33,13 +32,16 @@ const Home = () => {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             
             const signer = provider.getSigner()
-         
             const contract = new ethers.Contract(prescription, Prescription.abi, signer)
             const transaction = contract.create(
                     uploadJsonForPrescription(
-                        e.target[0].value.toUpperCase(),        //name
-                        e.target[1].value),                     //desc
-                    e.target[2].value)                          //patient's wallet
+                        (e.target[0].value).toString(),           //date
+                        e.target[1].value,                        //name
+                        e.target[2].value,                      //drug name
+                        e.target[3].value,                      //qty
+                        e.target[4].value,                      //number of refill
+                        e.target[5].value)  ,                    //signature
+                    e.target[6].value)                          //patient's wallet
         }
     }
 
@@ -79,11 +81,36 @@ const Home = () => {
             }   
         }
 
-    async function uploadJsonForPrescription(e1,e2) {
+    async function uploadJsonForPrescription(e1,e2,e3,e4,e5,e6) {
+        const today = new Date()
+        let response 
+
+        if (typeof window.ethereum !== 'undefined') {
+            const provider = new ethers.providers.AlchemyProvider("maticmum")
+            
+            
+            const contract = new ethers.Contract(prescription, Prescription.abi, provider)
+            try {
+              const data1 = await contract.getTokenAmount()
+              let total = parseInt(data1._hex,16)
+              response = total
+            } catch (err) {
+              console.log("Error: ", err)
+            }
+      
+      
+          }  
+        
         const content = JSON.stringify(
             {
-                "name": e1,
-                "description": e2,
+                "date_issue": today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() + ' '+ today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds(),
+                "limit_date": e1,
+                "patient_name": e2,
+                'drug_name': e3,
+                "qty": e4,
+                "num_refill":e5,
+                'sign':e6,
+                'id': response+1,
                 "image": fileUrl
             })
 
@@ -98,10 +125,12 @@ const Home = () => {
 
 
     async function uploadJsonForReceipt(data) {
+        const today = new Date()
         const content = JSON.stringify(
             {
             "information": data,
-            "status": "receipt"
+            "status": "receipt",
+            "date_receive": today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() + ' '+ today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
             })
 
         try {
@@ -166,6 +195,11 @@ const Home = () => {
        
       }
 
+    //   async function fetchTotalAmount(e){
+       
+    //   }
+
+
       async function checkReceipt(e){
         e.preventDefault()
         if (typeof window.ethereum !== 'undefined') {
@@ -195,13 +229,16 @@ const Home = () => {
         }
        
       }
+
+
+      
       
 
 
   return (
     <div>
         <div className='navbar'>
-        <h1>PharmaZ</h1>
+        <h1>PharmaZ </h1>
         </div>
 
 
@@ -217,8 +254,8 @@ const Home = () => {
 
         
         <form onSubmit={mintPrescription}>
-             <label htmlFor='date-issue'>Date of issue: </label>
-             <input id='date-issue' type="datetime-local"></input><br/>
+             <label htmlFor='limit-date'>Limit date: </label>
+             <input id='limit-date' type="datetime-local"></input><br/>
             
              <label htmlFor='patient-name'>Patient's name: </label>
              <input id='patient-name' ></input><br/>
@@ -258,40 +295,44 @@ const Home = () => {
 
 
 
-        <section onClick={checkPrescription}> Prescription</section> <br/>
-
+        <section onClick={checkPrescription}> === Prescription === </section> <br/>
+        <div className='prescriptions'>
         {
             prescriptions.map((p,index) =>{
-                console.log(p)
                 let date = p.date_issue;
                 let image = p.image
+                let id = p.id
 
                 return (
                     <div className ='prescription'>
-                        <h3>{date}</h3>
+                        <h3>{date}</h3><br/>
+                        <h3>{id}</h3>
                     <img src={image}/>
                     </div>
                 )
             })
 
         }
+            </div>
 
-        <section onClick={checkReceipt}> Receipt</section>
-
+        <section onClick={checkReceipt}> === Receipt === </section>
+        <div className='receipts'>
         {
+          
             receipts.map((p,index) =>{
-                let date = p.date_receipt
-                let image = p.information
-
+                let date = p.date_receive
+        
+                
                 return (
                     <div className ='receipt'>
                         <h3>{date}</h3>
-                    !image.image || <img src={image.image}/>
+                        <img src={require("./doc.png")} alt='document-img'/>
                     </div>
                 )
             })
-
+           
         }
+        </div>
         </div>
 
 
@@ -309,11 +350,13 @@ const Home = () => {
 
         <div id='other' className='other'>
 
-            Other <br/>
-            <a href='https://github.com/patkamon/pharmaz' target="_blank">Github</a>
+            <h2>Other</h2> <br/>
+            <a href='https://github.com/patkamon/pharmaz' target="_blank">Github</a>  <div></div>   
             <a href='https://devfolio.co/gdsc-hacknmims/dashboard' target="_blank">Devfolio</a>
 
         </div>
+
+        
 
 
 
