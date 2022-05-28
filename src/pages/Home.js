@@ -7,6 +7,8 @@ import axios from 'axios'
 
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 
+import './Home.css';
+
 
 
 const Home = () => {
@@ -193,39 +195,54 @@ const Home = () => {
 
   return (
     <div>
-        
-        home
+        <div className='navbar'>
+        <h1>PharmaZ</h1>
+        </div>
 
-        <div>Doctor:<br/>
+
+        <div class="grid-container">
+                <a class="grid-item" href='#doctor'> <h5 >DOCTOR</h5> <p>👨‍⚕️</p></a>
+                <a class="grid-item"  href='#patient'> <h5>PATIENT</h5><p>🙍‍♂️</p></a>
+                <a class="grid-item"  href='#pharmacist'><h5>PHARMACIST</h5> <p>🧑‍⚕️</p></a>
+        </div>
+
+
+        <div id='doctor' className='doctor'>
+        <h2>Doctor:</h2>
+
         
         <form onSubmit={mintPrescription}>
-            <input></input>
-            <input></input>
-            <input></input>
-            <input
+            <input></input><br/>
+            <input></input><br/>
+            <input placeholder="patient's wallet"></input><br/>
+            <input 
             type="file"
             name="Asset"
             className="my-4"
             onChange={onChange}
-            />
-            <input className='btn' type='submit' value='Create Prescription'/> 
+            /><br/>
+            <input className='btn' type='submit' value='Create Prescription'/> <br/>
         </form>
 
 
         
         </div>
 
-        <div>Patient:<br/>
+        <div id='patient' className='patient'>
+            
+            <h2>Patient:</h2>
 
 
 
 
-        <button onClick={checkPrescription}> Prescription</button>
-        <button onClick={checkReceipt}> Receipt</button>
+        <section onClick={checkPrescription}> Prescription</section> <br/>
+        <section onClick={checkReceipt}> Receipt</section>
         </div>
 
 
-        <div>Pharmacist:<br/>
+        <div id='pharmacist' className='pharmacist'>
+        <h2>Pharmacist:</h2>
+
         
         <form onSubmit={mintReceipt}>
             <input></input>
@@ -234,6 +251,15 @@ const Home = () => {
         </form>
         </div>
       
+
+        <div id='other' className='other'>
+
+            Other <br/>
+            Github
+            Devfolio
+
+        </div>
+
 
 
 
