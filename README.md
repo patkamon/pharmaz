@@ -1,8 +1,12 @@
 # Pharmaz
 
 
+
 ***Pharmaz*** is a decentralized application deployed on Polygon Mumbai testnet.
 The purpose of Pharmaz is to transform prescriptions into NFTs.
+The problem statement Pharmaz choose is the number 3 solutions that can be deployed in a healthcare setting, for tracking and manage prescription for drugs or medicines.
+Note: Pharmacy is a project for GDSC HackNMIMS for more info [click here](https://devfolio.co/projects/pharmaz-3f5a)
+Note: [Pharmacy](https://ipfs.infura.io/ipfs/QmQ9scKkyknUZWYdPGkLQknA878paa8PizqZWTW7G2BeSb) was already deployed using spheron and filecoin technology.
 
 ***Process***
 By using this doctor will no longer need to give you a prescription paper that is difficult to manage or take care of, instead doctor will provide you a prescription in form of NFT and send it directly to your wallet address.
